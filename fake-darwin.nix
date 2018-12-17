@@ -3,12 +3,12 @@
 , unzip
 }:
   stdenv.mkDerivation rec {
-    version = "5.8.4";
+    version = "5.11.1";
     name = "fake-dotnetcore-${version}";
 
     src = fetchurl {
       url = "https://github.com/fsharp/FAKE/releases/download/${version}/fake-dotnetcore-osx.10.11-x64.zip";
-      sha256 = "0fljx9rxxmh8yb48mksr1vkq627p8i49y33cybl6jssi1c8c2zi1";
+      sha256 = "09g5dj39fws0wch0zxz3wdv3y2qph801nxgb85ns5ksl8lpn1195";
     };
 
     buildInputs = [ unzip ];
