@@ -7,12 +7,17 @@ let
                    sha256="1h43sgg8kj4r28j4s181sfb00d5fxwgnfq27jf5dz4sng5iwhyyw";
   }) {};
 
-
   dotnet = ps1812.callPackage ( import ./dotnet.nix ) {};
   fake =  ps1812.callPackage ( import ./fake-darwin.nix ) {};
   paket = ps1812.callPackage ( import ./paket.nix ) {};
 
-  vscode = 
+  filesRefs = ps1812.callPackage ( import ./dotnetpkgs.nix ) {};
+  updateRefsInFile = { targetFile, replaceFrom, replaceTo, mapFunction, refs }: 
+  ''perl -0777 -i.original -pe 's,(${replaceFrom}).+(${replaceTo}),\1\n${
+        (lib.concatMapStringsSep ''\n'' mapFunction) refs
+      }\n\2,igs' ${targetFile}'';
+
+  vscode =
     #buildVSCode can be found in https://github.com/countoren/nixpkgs/blob/master/config.nix
     buildVSCode {
       settingsFile = ./vscode/settings.nix;
@@ -60,10 +65,13 @@ stdenv.mkDerivation rec {
     ps1812.nodejs-10_x
   ] 
   ++ vscode.buildInputs;
+  preBuild = lib.concatMapStringsSep ''\n'' updateRefsInFile filesRefs ;
+
   shellHook = ''
     #this will dotnet trying to catch packages in dotnet folder in nixstore(cannot be done due to permissions)
     export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
     figlet "wellcome to FS test"
+    buildPhase
   ''
   + vscode.shellHook;
 }

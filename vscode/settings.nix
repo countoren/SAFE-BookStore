@@ -1,7 +1,7 @@
 { fsharp }:
 ''
 {
-  "FSharp.fsacRuntime": "netcore",
+  "FSharp.fsacRuntime": "net",
   "FSharp.fsiFilePath": "${fsharp}/bin/fsi",
 	"vim.easymotion": true,
 	"vim.sneak": true,
